@@ -1,0 +1,51 @@
+{
+  "name": "quizar-wikidata",
+  "version": "0.0.1",
+  "description": "Quizar wikidata",
+  "main": "./lib/index.js",
+  "types": "./types/index.d.ts",
+  "scripts": {
+    "pretest": "npm run tsc",
+    "test": "mocha",
+    "tsc": "tsc",
+    "tscw": "tsc -w",
+    "preversion": "npm run tsc",
+    "postversion": "git push --follow-tags",
+    "prepublish": "npm run tsc"
+  },
+  "engines": {
+    "node": ">=4.0.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/quizar/wikidata-js.git"
+  },
+  "keywords": [
+    "quiz",
+    "quizzes",
+    "quizar",
+    "wikidata"
+  ],
+  "author": "Dumitru Cantea",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/quizar/wikidata-js/issues"
+  },
+  "homepage": "https://github.com/quizar/wikidata-js#readme",
+  "devDependencies": {
+    "@types/bluebird": "^3.5.8",
+    "@types/debug": "0.0.29",
+    "@types/joi": "^10.4.0",
+    "@types/lodash": "^4.14.67",
+    "@types/mocha": "^2.2.41",
+    "@types/node": "^7.0.5",
+    "@types/request": "^2.0.0",
+    "debug": "^2.6.8",
+    "mocha": "^3.2.0",
+    "typescript": "^2.3.4"
+  },
+  "dependencies": {
+    "bluebird": "^3.5.0",
+    "request": "^2.81.0"
+  }
+}
