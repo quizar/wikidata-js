@@ -21,6 +21,7 @@ export type QuestionDataInfo = {
 }
 
 export interface QuestionQueryData extends QueryData {
+    subjects?: string
     questions: QuestionDataInfo[]
 }
 

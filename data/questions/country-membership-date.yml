@@ -1,6 +1,5 @@
 
 # Wikidata SPARQL query
-
 query: |
     SELECT ?subject ?org ?year ?date WHERE {
         BIND (wd:${subject} AS ?subject).
@@ -16,12 +15,13 @@ query: |
     }
 
 # query params
-
 params:
     - subject
 
-# questions to format
+# query subjects source
+subjects: countries
 
+# questions to format
 questions:
     -
         id: country-membership-date
