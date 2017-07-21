@@ -1,6 +1,6 @@
 
 import { join } from 'path';
-import { Bluebird, StringPlainObject, DATA_FILE_EXTENSION, AnyPlainObject } from './utils';
+import { Bluebird, StringPlainObject, DATA_FILE_EXTENSION, AnyPlainObject, PlainObject } from './utils';
 import { Query, QueryData, ExecuteQueryItemType } from './query';
 
 export type QuestionDataValue = {
@@ -10,8 +10,10 @@ export type QuestionDataValue = {
 
 export type QuestionDataInfo = {
     id: string
-    title: string
-    question: string
+    info: PlainObject<{
+        title: string
+        question: string
+    }>
     type: 'ONE' | 'MANY' | 'TF'
     data: { subject: string, predicate: string, object: string, adverbs?: StringPlainObject }
     value: QuestionDataValue

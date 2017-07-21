@@ -25,8 +25,10 @@ params:
 questions:
     -
         id: country-membership-date
-        title: Data la care a aderat ${subject.shortestName} la ${object.shortestName}
-        question: La ce dată a aderat ${subject.shortestName} la ${object.shortestName}?
+        info:
+            ro:
+                title: Data la care a aderat ${subject.shortestName} la ${object.shortestName}
+                question: La ce dată a aderat ${subject.shortestName} la ${object.shortestName}?
         type: ONE # | MANY | TF
         # question data
         data:
