@@ -1,0 +1,44 @@
+
+# Wikidata SPARQL query
+
+query: |
+    SELECT ?subject ?org ?year ?date WHERE {
+        BIND (wd:${subject} AS ?subject).
+        ?subject p:P463 ?item.
+        ?item ps:P463 ?org.
+        
+        ?item pqv:P580 ?startTimeNode.
+        ?startTimeNode wikibase:timeValue ?time.
+        ?startTimeNode wikibase:timePrecision ?timePrecision.
+        FILTER (?timePrecision >= 9) # has YEAR
+        BIND(SUBSTR(STR(?time), 1, 4) as ?year)
+        BIND(IF(?timePrecision >= 11, SUBSTR(STR(?time), 1, 10),"") as ?date)
+    }
+
+# query params
+
+params:
+    - subject
+
+# questions to format
+
+questions:
+    -
+        id: country-membership-date
+        title: Data la care a aderat ${subject.shortestName} la ${object.shortestName}
+        question: La ce dată a aderat ${subject.shortestName} la ${object.shortestName}?
+        type: ONE # | MANY | TF
+        # question data
+        data:
+            subject: ?subject
+            predicate: P463
+            object: ?org
+            adverbs:
+                date: ?date
+        value:
+            data: adverbs.date
+            type: date
+        topics:
+            - subject
+            - object
+

@@ -1,0 +1,3 @@
+query: select ?id where { ?id wdt:P31 wd:${instance} . }
+params:
+    - instance
