@@ -10,12 +10,16 @@ export class SubjectQuery extends Query<string, QueryData> {
         return Query.getList('subjects', dir);
     }
 
-    static get(name: string): Bluebird<SubjectQuery> {
+    static getData(name: string): Bluebird<QueryData> {
         const file = join(__dirname, '..', 'data', 'subjects', name + DATA_FILE_EXTENSION);
         return Query.getContent<QueryData>(file).then(data => {
             data.name = name;
-            return new SubjectQuery(data);
+            return data;
         });
+    }
+
+    static get(name: string): Bluebird<SubjectQuery> {
+        return SubjectQuery.getData(name).then(data => new SubjectQuery(data));
     }
 
     static execute(name: string, params?: StringPlainObject) {

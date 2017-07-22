@@ -3,19 +3,29 @@ import { join } from 'path';
 import { Bluebird, StringPlainObject, DATA_FILE_EXTENSION, AnyPlainObject, PlainObject } from './utils';
 import { Query, QueryData, ExecuteQueryItemType } from './query';
 import { SubjectQuery } from './subject-query';
+import { PropertyValueType } from 'quizar-domain';
+
+export type QuestionDataValueType = 'entity' | 'date' | 'number' | 'string' | 'wiki-image' | 'boolean';
 
 export type QuestionDataValue = {
-    type: 'entity' | 'date' | 'year' | 'number' | 'string'
+    type: QuestionDataValueType
     data: string
+    max?: number
+    min?: number
+    groupBy?: string[]
 }
 
-export type QuestionDataInfo = {
+export type QuestionInfoInput = 'TYPE' | 'SELECT';
+
+export type QuestionInfo = {
     id: string
     info: PlainObject<{
         title: string
         question: string
     }>
-    type: 'ONE' | 'MANY' | 'TF'
+    format: 'VALUE' | 'YESNO' | 'IMAGE'
+    input: QuestionInfoInput[]
+    difficulty: number
     data: { subject: string, predicate: string, object: string, adverbs?: StringPlainObject }
     value: QuestionDataValue
     topics: string[]
@@ -23,7 +33,7 @@ export type QuestionDataInfo = {
 
 export interface QuestionQueryData extends QueryData {
     subjects?: { name: string; params?: StringPlainObject }
-    questions: QuestionDataInfo[]
+    questions: QuestionInfo[]
 }
 
 export class QuestionQuery extends Query<ExecuteQueryItemType, QuestionQueryData> {
@@ -32,13 +42,16 @@ export class QuestionQuery extends Query<ExecuteQueryItemType, QuestionQueryData
         const dir = join(__dirname, '..', 'data', 'questions');
         return Query.getList('questions', dir);
     }
-
-    static get(name: string): Bluebird<QuestionQuery> {
+    static getData(name: string): Bluebird<QuestionQueryData> {
         const file = join(__dirname, '..', 'data', 'questions', name + DATA_FILE_EXTENSION);
         return Query.getContent<QuestionQueryData>(file).then(data => {
             data.name = name;
-            return new QuestionQuery(data);
+            return data;
         });
+    }
+
+    static get(name: string): Bluebird<QuestionQuery> {
+        return QuestionQuery.getData(name).then(data => new QuestionQuery(data));
     }
 
     static execute(name: string, params?: StringPlainObject) {
@@ -64,6 +77,4 @@ export class QuestionQuery extends Query<ExecuteQueryItemType, QuestionQueryData
 
         return super.execute(params);
     }
-
-    // questions(data:ExecuteQueryItemType[], questionId?: string):Bluebird<>
 }

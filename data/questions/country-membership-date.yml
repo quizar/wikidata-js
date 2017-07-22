@@ -11,7 +11,7 @@ query: |
         ?startTimeNode wikibase:timePrecision ?timePrecision.
         FILTER (?timePrecision >= 9) # has YEAR
         BIND(SUBSTR(STR(?time), 1, 4) as ?year)
-        BIND(IF(?timePrecision >= 11, SUBSTR(STR(?time), 1, 10),"") as ?date)
+        BIND(IF(?timePrecision >= 11, SUBSTR(STR(?time), 1, 10), "") as ?date)
     }
 
 # query params
@@ -30,7 +30,8 @@ questions:
             ro:
                 title: Data la care a aderat ${subject.shortestName} la ${object.shortestName}
                 question: La ce dată a aderat ${subject.shortestName} la ${object.shortestName}?
-        type: ONE # | MANY | TF
+        format: VALUE # | YESNO | IMAGE
+        difficulty: 5
         # question data
         data:
             subject: ?subject
@@ -41,7 +42,11 @@ questions:
         value:
             data: adverbs.date
             type: date
+            format: name
+            max: 1
+            groupBy:
+                - subject
+                - object
         topics:
             - subject
             - object
-
