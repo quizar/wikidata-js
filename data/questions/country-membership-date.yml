@@ -19,7 +19,8 @@ params:
     - subject
 
 # query subjects source
-subjects: countries
+subjects:
+    name: countries
 
 # questions to format
 questions:

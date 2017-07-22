@@ -2,6 +2,7 @@
 import { join } from 'path';
 import { Bluebird, StringPlainObject, DATA_FILE_EXTENSION, AnyPlainObject, PlainObject } from './utils';
 import { Query, QueryData, ExecuteQueryItemType } from './query';
+import { SubjectQuery } from './subject-query';
 
 export type QuestionDataValue = {
     type: 'entity' | 'date' | 'year' | 'number' | 'string'
@@ -21,7 +22,7 @@ export type QuestionDataInfo = {
 }
 
 export interface QuestionQueryData extends QueryData {
-    subjects?: string
+    subjects?: { name: string; params?: StringPlainObject }
     questions: QuestionDataInfo[]
 }
 
@@ -50,6 +51,18 @@ export class QuestionQuery extends Query<ExecuteQueryItemType, QuestionQueryData
 
     protected executeByName(name: string, params?: StringPlainObject): Bluebird<ExecuteQueryItemType[]> {
         return QuestionQuery.execute(name, params);
+    }
+
+    execute(params?: StringPlainObject): Bluebird<ExecuteQueryItemType[]> {
+        if (!params && this.data.params && this.data.params.length && this.data.subjects) {
+            return SubjectQuery.execute(this.data.subjects.name, this.data.subjects.params)
+                .then(subjects =>
+                    Bluebird.reduce(subjects, (result, subject) =>
+                        this.execute({ subject: subject })
+                            .then(r => result.concat(r)), []));
+        }
+
+        return super.execute(params);
     }
 
     // questions(data:ExecuteQueryItemType[], questionId?: string):Bluebird<>
