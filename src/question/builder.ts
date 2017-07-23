@@ -97,6 +97,7 @@ function buildQuestion(lang: string, qinfo: QuestionInfo, qdata: QuestionInfoDat
     };
 
     if (question.values.length === 0) {
+        debug('no values for question=' + qinfo.id);
         return null;
     }
 
@@ -119,14 +120,14 @@ function buildQuestion(lang: string, qinfo: QuestionInfo, qdata: QuestionInfoDat
 
     // info
     const info = qinfo.info[lang];
-    if (info.question) {
-        question.question = formatString(info.question, entityData);
-    }
     if (info.title) {
         question.title = formatString(info.title, entityData);
     }
+    if (info.description) {
+        question.description = formatString(info.description, entityData);
+    }
 
-    debug('built question', question.question || question.title);
+    debug('built question', question.title);
 
     return question;
 }
@@ -138,6 +139,9 @@ function formatString(text: string, data: QuestionDataType): string {
         const name = result[1];
         const reg = new RegExp('\\$\\{' + name + '\\}', 'g');
         const value = <string>_.get(data, name);
+        if (~[null, undefined, ''].indexOf(value)) {
+            throw new Error(`Invalid format name: ${name} in question info`);
+        }
         // debug('string replace name=' + name + ', reg=', reg, 'value', value);
         text = text.replace(reg, value);
     }

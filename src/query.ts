@@ -22,6 +22,9 @@ export interface QueryData {
     readonly ref?: QueryDataRef
 }
 
+/**
+ * Base data Query class
+ */
 export abstract class Query<RESULT, QDT extends QueryData> {
     private static listData: PlainObject<string[]> = {}
 

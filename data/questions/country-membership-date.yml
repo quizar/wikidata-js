@@ -30,8 +30,8 @@ questions:
         id: country-membership-date
         info:
             ro:
-                title: Data la care a aderat ${subject.shortName} la ${object.shortestName}
-                question: La ce dată ${subject.shortName} a devenit membru ${object.shortName}?
+                title: La ce dată ${subject.shortName} a devenit membru ${object.shortName}?
+                description: Data la care a aderat ${subject.shortName} la ${object.shortName}
         format: VALUE # | YESNO | IMAGE
         difficulty: 5
         # question data
@@ -56,8 +56,8 @@ questions:
         id: country-membership-year
         info:
             ro:
-                title: Anul în care a aderat ${subject.shortName} la ${object.shortestName}
-                question: În ce an ${subject.shortName} a devenit membru ${object.shortestName}?
+                title: În ce an ${subject.shortName} a devenit membru ${object.shortestName}?
+                description: Anul în care a aderat ${subject.shortName} la ${object.shortestName}
         format: VALUE # | YESNO | IMAGE
         difficulty: 4
         # question data

@@ -28,8 +28,8 @@ export type QuestionInfo = {
     id: string
     name: string
     info: PlainObject<{
+        description: string
         title: string
-        question: string
     }>
     format: 'VALUE' | 'YESNO' | 'IMAGE'
     difficulty: number

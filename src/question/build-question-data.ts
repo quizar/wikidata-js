@@ -33,6 +33,11 @@ function getEntityMap(data: AnyPlainObject): PlainObject<string[]> {
     let keys: PlainObject<string[]> = {};
     Object.keys(data).forEach(key => {
         const id = data[key];
+        if (~[null, undefined].indexOf(id)) {
+            debug('delete null question data item');
+            delete data[key];
+            return;
+        }
         if (typeof id === 'string') {
             if (isEntityId(id)) {
                 keys[id] = keys[id] || [];

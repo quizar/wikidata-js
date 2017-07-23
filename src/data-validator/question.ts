@@ -15,9 +15,9 @@ const schema = Joi.object().keys({
     questions: Joi.array().items(Joi.object().keys({
         id: Joi.string().regex(/^[\w\d_-]{1,40}$/).required(),
         info: Joi.object().pattern(/^[a-z]{2}$/, Joi.object().keys({
-            title: Joi.string(),
-            question: Joi.string()
-        }).or('title', 'question')).required(),
+            title: Joi.string().required(),
+            description: Joi.string()
+        })).required(),
         format: Joi.valid('VALUE', 'YESNO', 'IMAGE').required(),
         difficulty: Joi.number().integer().min(1).max(5).required(),
         data: Joi.object().keys({
