@@ -15,7 +15,6 @@ const schema = Joi.object().keys({
         id: Joi.string().regex(/^[\w\d_-]{1,40}$/).required(),
         info: Joi.object().pattern(/^[a-z]{2}$/, Joi.object().keys({ title: Joi.string(), question: Joi.string() }).or('title', 'question')),
         format: Joi.valid('VALUE', 'YESNO', 'IMAGE').required(),
-        input: Joi.array().items(Joi.valid('TYPE', 'SELECT')).min(1).required(),
         difficulty: Joi.number().integer().min(1).max(5).required(),
         data: Joi.object().keys({
             subject: Joi.string().required(),
@@ -25,7 +24,7 @@ const schema = Joi.object().keys({
         }).required(),
         value: Joi.object().keys({
             data: Joi.string().required(),
-            type: Joi.valid('date').required(),
+            type: Joi.valid('DATE').required(),
             max: Joi.number().integer().min(1).max(1000),
             min: Joi.number().integer().min(1),
             groupBy: Joi.array().items(Joi.string())

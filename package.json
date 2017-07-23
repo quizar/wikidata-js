@@ -37,7 +37,8 @@
     "@types/debug": "0.0.29",
     "@types/joi": "^10.4.0",
     "@types/js-yaml": "^3.9.0",
-    "@types/lodash": "^4.14.67",
+    "@types/lodash": "^4.14.71",
+    "@types/lru-cache": "^4.0.0",
     "@types/mocha": "^2.2.41",
     "@types/node": "^7.0.5",
     "@types/request": "^2.0.0",
@@ -47,8 +48,12 @@
   },
   "dependencies": {
     "bluebird": "^3.5.0",
+    "entitizer.models-builder": "^0.1.12",
     "joi": "^10.6.0",
     "js-yaml": "^3.9.0",
-    "request": "^2.81.0"
+    "lodash": "^4.17.4",
+    "lru-cache": "^4.1.1",
+    "request": "^2.81.0",
+    "wiki-entity": "^0.1.4"
   }
 }

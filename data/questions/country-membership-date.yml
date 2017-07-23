@@ -28,8 +28,8 @@ questions:
         id: country-membership-date
         info:
             ro:
-                title: Data la care a aderat ${subject.shortestName} la ${object.shortestName}
-                question: La ce dată a aderat ${subject.shortestName} la ${object.shortestName}?
+                title: Data la care a aderat ${subject.shortName} la ${object.shortestName}
+                question: La ce dată a aderat ${subject.shortName} la ${object.shortName}?
         format: VALUE # | YESNO | IMAGE
         difficulty: 5
         # question data
@@ -41,7 +41,7 @@ questions:
                 date: ?date
         value:
             data: adverbs.date
-            type: date
+            type: DATE
             format: name
             max: 1
             groupBy:
