@@ -29,7 +29,7 @@ questions:
         info:
             ro:
                 title: Data la care a aderat ${subject.shortName} la ${object.shortestName}
-                question: La ce dată a aderat ${subject.shortName} la ${object.shortName}?
+                question: La ce dată ${subject.shortName} a devenit membru ${object.shortName}?
         format: VALUE # | YESNO | IMAGE
         difficulty: 5
         # question data
@@ -42,7 +42,33 @@ questions:
         value:
             data: adverbs.date
             type: DATE
-            format: name
+            format: VALUE #| NAME | IMAGE
+            max: 1
+            groupBy:
+                - subject
+                - object
+        topics:
+            - subject
+            - object
+    -
+        id: country-membership-year
+        info:
+            ro:
+                title: Anul în care a aderat ${subject.shortName} la ${object.shortestName}
+                question: În ce an ${subject.shortName} a devenit membru ${object.shortestName}?
+        format: VALUE # | YESNO | IMAGE
+        difficulty: 4
+        # question data
+        data:
+            subject: ?subject
+            predicate: P463
+            object: ?org
+            adverbs:
+                date: ?year
+        value:
+            data: adverbs.date
+            type: NUMBER
+            format: VALUE #| NAME | IMAGE
             max: 1
             groupBy:
                 - subject

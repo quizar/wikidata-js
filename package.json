@@ -47,6 +47,7 @@
     "typescript": "^2.3.4"
   },
   "dependencies": {
+    "async-eventemitter": "^0.2.3",
     "bluebird": "^3.5.0",
     "entitizer.models-builder": "^0.1.12",
     "joi": "^10.6.0",
@@ -54,6 +55,6 @@
     "lodash": "^4.17.4",
     "lru-cache": "^4.1.1",
     "request": "^2.81.0",
-    "wiki-entity": "^0.1.4"
+    "wiki-entity": "^0.2.0"
   }
 }

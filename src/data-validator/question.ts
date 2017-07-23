@@ -13,7 +13,10 @@ const schema = Joi.object().keys({
     }),
     questions: Joi.array().items(Joi.object().keys({
         id: Joi.string().regex(/^[\w\d_-]{1,40}$/).required(),
-        info: Joi.object().pattern(/^[a-z]{2}$/, Joi.object().keys({ title: Joi.string(), question: Joi.string() }).or('title', 'question')),
+        info: Joi.object().pattern(/^[a-z]{2}$/, Joi.object().keys({
+            title: Joi.string(),
+            question: Joi.string()
+        }).or('title', 'question')).required(),
         format: Joi.valid('VALUE', 'YESNO', 'IMAGE').required(),
         difficulty: Joi.number().integer().min(1).max(5).required(),
         data: Joi.object().keys({
@@ -24,10 +27,11 @@ const schema = Joi.object().keys({
         }).required(),
         value: Joi.object().keys({
             data: Joi.string().required(),
-            type: Joi.valid('DATE').required(),
+            type: Joi.valid('DATE', 'NUMBER', 'STRING', 'WIKIIMAGE').required(),
             max: Joi.number().integer().min(1).max(1000),
             min: Joi.number().integer().min(1),
-            groupBy: Joi.array().items(Joi.string())
+            groupBy: Joi.array().items(Joi.string()),
+            format: Joi.valid('VALUE', 'NAME', 'IMAGE')
         }).required(),
         topics: Joi.array().items(Joi.string()).min(1).max(5).required()
     })).min(1).required()

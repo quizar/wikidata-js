@@ -3,17 +3,21 @@ import { join } from 'path';
 import { Bluebird, StringPlainObject, DATA_FILE_EXTENSION, AnyPlainObject, PlainObject } from './utils';
 import { Query, QueryData, ExecuteQueryItemType } from './query';
 import { SubjectQuery } from './subject-query';
-import { PropertyValueType, createEnum } from 'quizar-domain';
+import { PropertyValueType, createEnum, QuestionValueFormat } from 'quizar-domain';
 
 export const QuestionInfoValueType = createEnum(['ENTITY', 'DATE', 'NUMBER', 'STRING', 'WIKIIMAGE', 'BOOLEAN']);
 export type QuestionInfoValueType = keyof typeof QuestionInfoValueType;
+
+export const QuestionInfoValueFormat = createEnum(['VALUE', 'NAME', 'IMAGE']);
+export type QuestionInfoValueFormat = keyof typeof QuestionInfoValueFormat;
 
 export type QuestionInfoValue = {
     type: QuestionInfoValueType
     data: string
     max?: number
     min?: number
-    groupBy?: string[]
+    groupBy?: string[],
+    format?: QuestionValueFormat
 }
 
 export type QuestionInfoData = {
