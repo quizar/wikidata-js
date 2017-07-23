@@ -1,4 +1,6 @@
 
+name: Country membership date
+
 # Wikidata SPARQL query
 query: |
     SELECT ?subject ?org ?year ?date WHERE {
@@ -20,7 +22,7 @@ params:
 
 # query subjects source
 subjects:
-    name: countries
+    id: countries
 
 # questions to format
 questions:

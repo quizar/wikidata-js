@@ -20,10 +20,10 @@ describe('SubjectQuery', function () {
             assert.equal('function', typeof SubjectQuery.get);
         });
         it('should get an SubjectQuery', function () {
-            const name = 'countries';
-            return SubjectQuery.get(name).then(countriesQuery => {
+            const id = 'countries';
+            return SubjectQuery.get(id).then(countriesQuery => {
                 assert.equal('object', typeof countriesQuery, 'countriesQuery must be an object');
-                assert.equal(name, countriesQuery.data.name, 'data query name not equal with required name');
+                assert.equal(id, countriesQuery.data.id, 'data query id not equal with required id');
             });
         });
     });
@@ -32,8 +32,8 @@ describe('SubjectQuery', function () {
             assert.equal('function', typeof SubjectQuery.execute);
         });
         it('should execute an existing query: countries', function () {
-            const name = 'countries';
-            return SubjectQuery.execute(name).then(countries => {
+            const id = 'countries';
+            return SubjectQuery.execute(id).then(countries => {
                 assert.equal(true, Array.isArray(countries), 'countries must be an array');
                 assert.equal('Q', countries[0].substr(0, 1), 'id must start with Q');
             });

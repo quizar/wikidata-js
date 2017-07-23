@@ -10,12 +10,13 @@ import { safeLoad } from 'js-yaml';
 export type ExecuteQueryItemType = PlainObject<{ type: string, value: string }>
 
 export type QueryDataRef = {
-    name: string
+    readonly id: string
     readonly params?: StringPlainObject
 }
 
 export interface QueryData {
-    name: string
+    id: string
+    readonly name?: string
     readonly params?: string[]
     readonly query?: string
     readonly ref?: QueryDataRef
@@ -64,10 +65,10 @@ export abstract class Query<RESULT, QDT extends QueryData> {
         }
 
         // process ref query
-        return this.executeByName(this.data.ref.name, this.data.ref.params);
+        return this.executeById(this.data.ref.id, this.data.ref.params);
     }
 
-    protected abstract executeByName(name: string, params?: StringPlainObject): Bluebird<RESULT[]>
+    protected abstract executeById(id: string, params?: StringPlainObject): Bluebird<RESULT[]>
 
     protected abstract parseDataItem(item: ExecuteQueryItemType): RESULT
 }

@@ -10,27 +10,27 @@ export class SubjectQuery extends Query<string, QueryData> {
         return Query.getList('subjects', dir);
     }
 
-    static getData(name: string): Bluebird<QueryData> {
-        const file = join(__dirname, '..', 'data', 'subjects', name + DATA_FILE_EXTENSION);
+    static getData(id: string): Bluebird<QueryData> {
+        const file = join(__dirname, '..', 'data', 'subjects', id + DATA_FILE_EXTENSION);
         return Query.getContent<QueryData>(file).then(data => {
-            data.name = name;
+            data.id = id;
             return data;
         });
     }
 
-    static get(name: string): Bluebird<SubjectQuery> {
-        return SubjectQuery.getData(name).then(data => new SubjectQuery(data));
+    static get(id: string): Bluebird<SubjectQuery> {
+        return SubjectQuery.getData(id).then(data => new SubjectQuery(data));
     }
 
-    static execute(name: string, params?: StringPlainObject) {
-        return SubjectQuery.get(name).then(query => query.execute(params));
+    static execute(id: string, params?: StringPlainObject) {
+        return SubjectQuery.get(id).then(query => query.execute(params));
     }
 
     protected parseDataItem(item: ExecuteQueryItemType): string {
         return item['id'].value.substr(item['id'].value.lastIndexOf('/') + 1);
     }
 
-    protected executeByName(name: string, params?: StringPlainObject): Bluebird<string[]> {
-        return SubjectQuery.execute(name, params);
+    protected executeById(id: string, params?: StringPlainObject): Bluebird<string[]> {
+        return SubjectQuery.execute(id, params);
     }
 }

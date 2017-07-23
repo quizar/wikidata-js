@@ -26,6 +26,7 @@ export type QuestionInfoData = {
 
 export type QuestionInfo = {
     id: string
+    name: string
     info: PlainObject<{
         title: string
         question: string
@@ -38,7 +39,7 @@ export type QuestionInfo = {
 }
 
 export interface QuestionQueryData extends QueryData {
-    subjects?: { name: string; params?: StringPlainObject }
+    subjects?: { id: string; params?: StringPlainObject }
     questions: QuestionInfo[]
 }
 
@@ -48,20 +49,20 @@ export class QuestionQuery extends Query<StringPlainObject, QuestionQueryData> {
         const dir = join(__dirname, '..', 'data', 'questions');
         return Query.getList('questions', dir);
     }
-    static getData(name: string): Bluebird<QuestionQueryData> {
-        const file = join(__dirname, '..', 'data', 'questions', name + DATA_FILE_EXTENSION);
+    static getData(id: string): Bluebird<QuestionQueryData> {
+        const file = join(__dirname, '..', 'data', 'questions', id + DATA_FILE_EXTENSION);
         return Query.getContent<QuestionQueryData>(file).then(data => {
-            data.name = name;
+            data.id = id;
             return data;
         });
     }
 
-    static get(name: string): Bluebird<QuestionQuery> {
-        return QuestionQuery.getData(name).then(data => new QuestionQuery(data));
+    static get(id: string): Bluebird<QuestionQuery> {
+        return QuestionQuery.getData(id).then(data => new QuestionQuery(data));
     }
 
-    static execute(name: string, params?: StringPlainObject) {
-        return QuestionQuery.get(name).then(query => query.execute(params));
+    static execute(id: string, params?: StringPlainObject) {
+        return QuestionQuery.get(id).then(query => query.execute(params));
     }
 
     protected parseDataItem(item: ExecuteQueryItemType): StringPlainObject {
@@ -77,13 +78,13 @@ export class QuestionQuery extends Query<StringPlainObject, QuestionQueryData> {
         return data;
     }
 
-    protected executeByName(name: string, params?: StringPlainObject): Bluebird<StringPlainObject[]> {
-        return QuestionQuery.execute(name, params);
+    protected executeById(id: string, params?: StringPlainObject): Bluebird<StringPlainObject[]> {
+        return QuestionQuery.execute(id, params);
     }
 
     execute(params?: StringPlainObject): Bluebird<StringPlainObject[]> {
         if (!params && this.data.params && this.data.params.length && this.data.subjects) {
-            return SubjectQuery.execute(this.data.subjects.name, this.data.subjects.params)
+            return SubjectQuery.execute(this.data.subjects.id, this.data.subjects.params)
                 .then(subjects =>
                     Bluebird.reduce(subjects, (result, subject) =>
                         this.execute({ subject: subject })

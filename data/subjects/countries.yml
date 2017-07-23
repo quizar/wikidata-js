@@ -1,4 +1,7 @@
+
+name: Countries
+
 ref:
-    name: subjects-by-instance
+    id: subjects-by-instance
     params:
         instance: Q6256
