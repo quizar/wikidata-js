@@ -9,26 +9,26 @@ import { safeLoad } from 'js-yaml';
 
 export type ExecuteQueryItemType = PlainObject<{ type: string, value: string }>
 
-export type QueryDataRef = {
+export type QueryDataInfoRef = {
     readonly id: string
     readonly params?: StringPlainObject
 }
 
-export interface QueryData {
+export interface QueryDataInfo {
     id: string
     readonly name?: string
     readonly params?: string[]
     readonly query?: string
-    readonly ref?: QueryDataRef
+    readonly ref?: QueryDataInfoRef
 }
 
 /**
  * Base data Query class
  */
-export abstract class Query<RESULT, QDT extends QueryData> {
+export abstract class Query<QDT, QDIT extends QueryDataInfo> {
     private static listData: PlainObject<string[]> = {}
 
-    constructor(protected readonly data: QDT) { }
+    constructor(public readonly dataInfo: QDIT) { }
 
     static getList(name: string, dir: string): Bluebird<string[]> {
         if (!Query.listData[name]) {
@@ -46,10 +46,10 @@ export abstract class Query<RESULT, QDT extends QueryData> {
         return readFile(file).then(content => <T>safeLoad(content));
     }
 
-    execute(params?: StringPlainObject): Bluebird<RESULT[]> {
+    execute(params?: StringPlainObject): Bluebird<QDT[]> {
         // validate params
         const paramsKeys = Object.keys(params || {});
-        const dataParamsKeys = this.data.params || [];
+        const dataParamsKeys = this.dataInfo.params || [];
         for (let i = 0; i < dataParamsKeys.length; i++) {
             const key = dataParamsKeys[i];
             if (paramsKeys.indexOf(key) < 0) {
@@ -58,8 +58,8 @@ export abstract class Query<RESULT, QDT extends QueryData> {
         }
 
         // format query
-        if (this.data.query) {
-            let query = this.data.query;
+        if (this.dataInfo.query) {
+            let query = this.dataInfo.query;
             paramsKeys.forEach(key => {
                 query = query.replace(new RegExp('\\${' + key + '}', 'g'), params[key]);
             });
@@ -68,12 +68,12 @@ export abstract class Query<RESULT, QDT extends QueryData> {
         }
 
         // process ref query
-        return this.executeById(this.data.ref.id, this.data.ref.params);
+        return this.executeById(this.dataInfo.ref.id, this.dataInfo.ref.params);
     }
 
-    protected abstract executeById(id: string, params?: StringPlainObject): Bluebird<RESULT[]>
+    protected abstract executeById(id: string, params?: StringPlainObject): Bluebird<QDT[]>
 
-    protected abstract parseDataItem(item: ExecuteQueryItemType): RESULT
+    protected abstract parseDataItem(item: ExecuteQueryItemType): QDT
 }
 
 function execute(query: string): Bluebird<ExecuteQueryItemType[]> {
