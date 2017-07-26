@@ -34,6 +34,7 @@ questions:
                 description: Data la care a aderat ${subject.shortName} la ${object.shortName}
         format: VALUE # | YESNO | IMAGE
         difficulty: 5
+        category: HISTORY
         # question data
         data:
             subject: ?subject
@@ -60,6 +61,7 @@ questions:
                 description: Anul în care a aderat ${subject.shortName} la ${object.shortestName}
         format: VALUE # | YESNO | IMAGE
         difficulty: 4
+        category: HISTORY
         # question data
         data:
             subject: ?subject

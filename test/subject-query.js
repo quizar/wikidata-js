@@ -23,7 +23,7 @@ describe('SubjectQuery', function () {
             const id = 'countries';
             return SubjectQuery.get(id).then(countriesQuery => {
                 assert.equal('object', typeof countriesQuery, 'countriesQuery must be an object');
-                assert.equal(id, countriesQuery.data.id, 'data query id not equal with required id');
+                assert.equal(id, countriesQuery.dataInfo.id, 'data query id not equal with required id');
             });
         });
     });

@@ -2,11 +2,11 @@
 const debug = require('debug')('quizar-wikidata');
 
 import { QuestionQueryDataInfo, QuestionInfo, QuestionInfoData, QuestionInfoValueType, QuestionInfoValueFormat, QuestionQueryDataItem } from './question-query';
-import { Question, QuestionSource, QuestionSourceData, PropertyValueType, QuestionValueFormat, isEntityId } from 'quizar-domain';
+import { Question, QuestionSource, QuestionSourceData, PropertyValueType, QuestionValueFormat, isEntityId, QuestionCategory } from 'quizar-domain';
 import { Bluebird, AnyPlainObject, _, StringPlainObject, PlainObject } from './utils';
 import { convertLocalEntityToDomainEntity } from './entity/converter';
 import { LocalEntity, exploreEntity } from './entity';
-import { QuestionQuery } from './question-query';
+import { QuestionQuery, QuestionInfoCategory } from './question-query';
 
 const AsyncEventEmitter = require('async-eventemitter');
 
@@ -132,6 +132,7 @@ function buildQuestion(lang: string, qinfo: QuestionInfo, qdata: QuestionInfoDat
         format: qinfo.format,
         valueType: getValueType(qinfo.value.type),
         valueFormat: getValueFormat(qinfo.value.format),
+        category: getCategory(qinfo.category),
         values: qdata.map(item => { return { value: <string>_.get(item, qinfo.value.data) } }).filter(item => item.value && item.value.length)
     };
 
@@ -186,6 +187,26 @@ function formatString(text: string, data: QuestionDataType): string {
     }
 
     return text;
+}
+
+function getCategory(type: QuestionInfoCategory): QuestionCategory {
+    switch (type) {
+        case QuestionInfoCategory.ART:
+            return QuestionCategory.ART;
+        case QuestionInfoCategory.SCIENCE:
+            return QuestionCategory.SCIENCE;
+        case QuestionInfoCategory.TECH:
+            return QuestionCategory.TECH;
+        case QuestionInfoCategory.ENTERTAINMENT:
+            return QuestionCategory.ENTERTAINMENT;
+        case QuestionInfoCategory.SPORTS:
+            return QuestionCategory.SPORTS;
+        case QuestionInfoCategory.GEOGRAPHY:
+            return QuestionCategory.GEOGRAPHY;
+        case QuestionInfoCategory.HISTORY:
+            return QuestionCategory.HISTORY;
+        default: throw new Error('Invalid QuestionInfoCategory: ' + type);
+    }
 }
 
 function getValueFormat(type: QuestionInfoValueFormat): QuestionValueFormat {

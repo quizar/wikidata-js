@@ -23,7 +23,7 @@ describe('QuestionQuery', function () {
             const id = 'country-membership-date';
             return QuestionQuery.get(id).then(query => {
                 assert.equal('object', typeof query, 'query must be an object');
-                assert.equal(id, query.data.id, 'data query id not equal with required id');
+                assert.equal(id, query.dataInfo.id, 'data query id not equal with required id');
             });
         });
     });

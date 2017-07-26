@@ -11,6 +11,9 @@ export type QuestionInfoValueType = keyof typeof QuestionInfoValueType;
 export const QuestionInfoValueFormat = createEnum(['VALUE', 'NAME', 'IMAGE']);
 export type QuestionInfoValueFormat = keyof typeof QuestionInfoValueFormat;
 
+export const QuestionInfoCategory = createEnum(['ART', 'SCIENCE', 'TECH', 'SPORTS', 'ENTERTAINMENT', 'GEOGRAPHY', 'HISTORY']);
+export type QuestionInfoCategory = keyof typeof QuestionInfoCategory;
+
 export type QuestionInfoValue = {
     type: QuestionInfoValueType
     data: string
@@ -36,6 +39,7 @@ export type QuestionInfo = {
     data: QuestionInfoData
     value: QuestionInfoValue
     topics: string[]
+    category: QuestionInfoCategory
 }
 
 export interface QuestionQueryDataInfo extends QueryDataInfo {

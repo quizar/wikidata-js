@@ -34,7 +34,8 @@ const schema = Joi.object().keys({
             groupBy: Joi.array().items(Joi.string()),
             format: Joi.valid('VALUE', 'NAME', 'IMAGE')
         }).required(),
-        topics: Joi.array().items(Joi.string()).min(1).max(5).required()
+        topics: Joi.array().items(Joi.string()).min(1).max(5).required(),
+        category: Joi.valid('ART', 'SCIENCE', 'TECH', 'SPORTS', 'ENTERTAINMENT', 'GEOGRAPHY', 'HISTORY').required()
     })).min(1).required()
 }).required();
 
