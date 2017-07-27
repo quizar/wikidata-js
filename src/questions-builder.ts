@@ -1,7 +1,7 @@
 
 const debug = require('debug')('quizar-wikidata');
 
-import { QuestionQueryDataInfo, QuestionInfo, QuestionInfoData, QuestionInfoValueType, QuestionInfoValueFormat, QuestionQueryDataItem } from './question-query';
+import { QuestionQueryTemplate, QuestionInfo, QuestionInfoData, QuestionInfoValueType, QuestionInfoValueFormat, QuestionQueryDataItem } from './question-query';
 import { Question, QuestionSource, QuestionSourceData, PropertyValueType, QuestionValueFormat, isEntityId, QuestionCategory } from 'quizar-domain';
 import { Bluebird, AnyPlainObject, _, StringPlainObject, PlainObject } from './utils';
 import { convertLocalEntityToDomainEntity } from './entity/converter';
@@ -72,12 +72,12 @@ export class QuestionsBuilder {
                 if (this.stopped) {
                     return;
                 }
-                const qinfo = questionQuery.dataInfo;
+                const template = questionQuery.template;
                 // execute question query:
                 return questionQuery.execute(query.params)
                     .then(queryValues => {
                         // foreach question info in question data info
-                        return Bluebird.each(qinfo.questions, qinfo => {
+                        return Bluebird.each(template.questions, qinfo => {
                             if (this.stopped) {
                                 return;
                             }

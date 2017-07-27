@@ -1,8 +1,9 @@
 
+const debug = require('debug')('quizar-wikidata');
+
 import { join } from 'path';
 import { Bluebird, StringPlainObject, DATA_FILE_EXTENSION, AnyPlainObject, PlainObject } from './utils';
-import { Query, QueryDataInfo, ExecuteQueryItemType } from './query';
-import { SubjectQuery } from './subject-query';
+import { WikidataQuery, QueryTemplate, WikidateValueItem } from './wikidata-query';
 import { PropertyValueType, createEnum, QuestionValueFormat } from 'quizar-domain';
 
 export const QuestionInfoValueType = createEnum(['ENTITY', 'DATE', 'NUMBER', 'STRING', 'WIKIIMAGE', 'BOOLEAN']);
@@ -42,59 +43,37 @@ export type QuestionInfo = {
     category: QuestionInfoCategory
 }
 
-export interface QuestionQueryDataInfo extends QueryDataInfo {
-    subjects?: { id: string; params?: StringPlainObject }
+export interface QuestionQueryTemplate extends QueryTemplate {
+    subjects?: { id: string; params?: StringPlainObject; values?: StringPlainObject }
     questions: QuestionInfo[]
 }
 
 export type QuestionQueryDataItem = StringPlainObject
 
-export class QuestionQuery extends Query<QuestionQueryDataItem, QuestionQueryDataInfo> {
-
-    static list(): Bluebird<String[]> {
-        const dir = join(__dirname, '..', 'data', 'questions');
-        return Query.getList('questions', dir);
-    }
-    static getDataInfo(id: string): Bluebird<QuestionQueryDataInfo> {
-        const file = join(__dirname, '..', 'data', 'questions', id + DATA_FILE_EXTENSION);
-        return Query.getContent<QuestionQueryDataInfo>(file).then(data => {
-            data.id = id;
-            return data;
-        });
-    }
+export class QuestionQuery extends WikidataQuery<QuestionQueryTemplate> {
 
     static get(id: string): Bluebird<QuestionQuery> {
-        return QuestionQuery.getDataInfo(id).then(data => new QuestionQuery(data));
-    }
-
-    static execute(id: string, params?: StringPlainObject) {
-        return QuestionQuery.get(id).then(query => query.execute(params));
-    }
-
-    protected parseDataItem(item: ExecuteQueryItemType): QuestionQueryDataItem {
-        const data: StringPlainObject = {};
-        Object.keys(item).forEach(key => {
-            data[key] = item[key].value;
-            const result = /\/entity\/(Q\d+)$/.exec(data[key]);
-            if (result && result.length > 1) {
-                data[key] = result[1];
-            }
-        });
-
-        return data;
-    }
-
-    protected executeById(id: string, params?: StringPlainObject): Bluebird<QuestionQueryDataItem[]> {
-        return QuestionQuery.execute(id, params);
+        return WikidataQuery.getTemplate<QuestionQueryTemplate>('question', id).then(template => new QuestionQuery(template));
     }
 
     execute(params?: StringPlainObject): Bluebird<QuestionQueryDataItem[]> {
-        if (!params && this.dataInfo.params && this.dataInfo.params.length && this.dataInfo.subjects) {
-            return SubjectQuery.execute(this.dataInfo.subjects.id, this.dataInfo.subjects.params)
+        if (!params && this.template.params && this.template.params.length && this.template.subjects) {
+            return WikidataQuery.getTemplate('subject', this.template.subjects.id)
+                .then(template => new WikidataQuery<QueryTemplate>(template))
+                .then(query => query.execute(this.template.subjects.params))
                 .then(subjects =>
-                    Bluebird.reduce(subjects, (result, subject) =>
-                        this.execute({ subject: subject })
-                            .then(r => result.concat(r)), []));
+                    Bluebird.reduce(subjects, (result, subject) => {
+                        const values = this.template.subjects.values;
+
+                        const params: StringPlainObject = Object.keys(values).reduce((r, prev) => {
+                            r[prev] = subject[values[prev]];
+                            return r;
+                        }, {});
+
+                        debug('build query params from source values: ', params, values);
+
+                        return this.execute(params).then(r => result.concat(r));
+                    }, []));
         }
 
         return super.execute(params);

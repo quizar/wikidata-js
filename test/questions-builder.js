@@ -1,14 +1,13 @@
 
 const assert = require('assert');
 const { QuestionsBuilder } = require('../lib/questions-builder');
-const { QuestionQuery } = require('../lib/question-query');
 const { Bluebird } = require('../lib/utils');
 
 describe('QuestionsBuilder', function () {
     it('should build questions', function () {
         this.timeout(1000 * 60);
         return new Bluebird((resolve, reject) => {
-            const builder = new QuestionsBuilder({ lang: 'ro', queries: [{ id: 'country-membership-date', params: { subject: 'Q217' } }] });
+            const builder = new QuestionsBuilder({ lang: 'ro', queries: [{ id: 'country-membership-date' }] });
             builder
                 .on('end', resolve)
                 .on('error', reject)

@@ -5,12 +5,14 @@ import { Bluebird } from '../utils';
 
 const schema = Joi.object().keys({
     id: Joi.string().regex(/^[a-z][a-z0-9-]{1,39}[a-z0-9]$/).required(),
+    type: Joi.valid('question').required(),
     name: Joi.string().trim().required(),
     params: Joi.array().items(Joi.string().trim().required()),
     query: Joi.string(),
     subjects: Joi.object().keys({
         id: Joi.string().regex(/^[a-z][a-z0-9-]{1,39}[a-z0-9]$/).required(),
-        params: Joi.object().pattern(/^[\w\d_-]{1,20}$/, Joi.string().trim().required())
+        params: Joi.object().pattern(/^[\w\d_-]{1,20}$/, Joi.string().trim().required()),
+        values: Joi.object().pattern(/^[\w\d_-]{1,20}$/, Joi.string().trim().required()).required()
     }),
     questions: Joi.array().items(Joi.object().keys({
         id: Joi.string().regex(/^[\w\d_-]{1,40}$/).required(),

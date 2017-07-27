@@ -5,6 +5,7 @@ import { Bluebird } from '../utils';
 
 const schema = Joi.object().keys({
     id: Joi.string().regex(/^[a-z][a-z0-9-]{1,39}[a-z0-9]$/).required(),
+    type: Joi.valid('subject').required(),
     name: Joi.string().trim().required(),
     params: Joi.array().items(Joi.string().trim().required()),
     query: Joi.string(),

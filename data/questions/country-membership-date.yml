@@ -23,6 +23,8 @@ params:
 # query subjects source
 subjects:
     id: countries
+    values:
+        subject: id
 
 # questions to format
 questions:
