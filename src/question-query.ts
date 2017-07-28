@@ -52,6 +52,10 @@ export type QuestionQueryDataItem = StringPlainObject
 
 export class QuestionQuery extends WikidataQuery<QuestionQueryTemplate> {
 
+    static list() {
+        return WikidataQuery.list('question');
+    }
+
     static get(id: string): Bluebird<QuestionQuery> {
         return WikidataQuery.getTemplate<QuestionQueryTemplate>('question', id).then(template => new QuestionQuery(template));
     }

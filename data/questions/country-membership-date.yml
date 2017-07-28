@@ -60,7 +60,7 @@ questions:
         info:
             ro:
                 title: În ce an ${subject.shortName} a devenit membru ${object.shortestName}?
-                description: Anul în care a aderat ${subject.shortName} la ${object.shortestName}
+                description: Anul în care a aderat ${subject.shortName} la ${object.shortName}
         format: VALUE # | YESNO | IMAGE
         difficulty: 4
         category: HISTORY

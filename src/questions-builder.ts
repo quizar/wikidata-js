@@ -125,7 +125,9 @@ export class QuestionsBuilder {
     }
 }
 
-function buildQuestion(lang: string, qinfo: QuestionInfo, qdata: QuestionInfoData[], entityData: QuestionDataType): Question {
+function buildQuestion(lang: string, qinfo: QuestionInfo, qdata: QuestionInfoData[], entityData: QuestionDataType): Bluebird<Question> {
+    debug('creating question: ' + qinfo.id);
+
     const question: Question = {
         lang: lang,
         difficulty: qinfo.difficulty,
@@ -138,25 +140,16 @@ function buildQuestion(lang: string, qinfo: QuestionInfo, qdata: QuestionInfoDat
 
     if (question.values.length === 0) {
         debug('no values for question=' + qinfo.id);
-        return null;
+        return Bluebird.resolve(null);
     }
 
     // values
     if (qinfo.value.max && qinfo.value.max < question.values.length) {
-        throw new Error('Question ' + qinfo.id + ' has too many values: ' + question.values.length);
+        return Bluebird.reject(new Error('Question ' + qinfo.id + ' has too many values: ' + question.values.length));
     }
     if (qinfo.value.min && qinfo.value.min > question.values.length) {
-        throw new Error('Question ' + qinfo.id + ' has insufficient values: ' + question.values.length);
+        return Bluebird.reject(new Error('Question ' + qinfo.id + ' has insufficient values: ' + question.values.length));
     }
-
-    // topics
-    question.topics = qinfo.topics.map(item => {
-        var local = <LocalEntity>_.get(entityData, item);
-        if (!local || !local.entity) {
-            throw new Error(`Invalid QuestionInfo.topics item: ${item}`);
-        }
-        return convertLocalEntityToDomainEntity(local);
-    });
 
     // info
     const info = qinfo.info[lang];
@@ -167,9 +160,22 @@ function buildQuestion(lang: string, qinfo: QuestionInfo, qdata: QuestionInfoDat
         question.description = formatString(info.description, entityData);
     }
 
-    debug('built question', question.title);
-
-    return question;
+    // topics
+    return Bluebird.mapSeries(qinfo.topics, item => {
+        if (isEntityId(item)) {
+            return exploreEntity(item, lang);
+        }
+        var local = <LocalEntity>_.get(entityData, item);
+        if (!local || !local.entity) {
+            throw new Error(`Invalid QuestionInfo.topics item: ${item}`);
+        }
+        return local;
+    })
+        .then(localTopics => localTopics.map(convertLocalEntityToDomainEntity))
+        .then(topics => {
+            question.topics = topics;
+            return question;
+        });
 }
 
 function formatString(text: string, data: QuestionDataType): string {

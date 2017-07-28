@@ -32,7 +32,9 @@ export interface QueryTemplate {
 export class WikidataQuery<QT extends QueryTemplate> {
     private static listData: PlainObject<string[]> = {}
 
-    constructor(public readonly template: QT) { }
+    constructor(public readonly template: QT) {
+        debug('created new Query: ' + template.id);
+    }
 
     static list(type: QueryTemplateType): Bluebird<string[]> {
         if (!WikidataQuery.listData[type]) {
@@ -58,6 +60,7 @@ export class WikidataQuery<QT extends QueryTemplate> {
     }
 
     execute(params?: StringPlainObject): Bluebird<WikidateValueItem[]> {
+        debug('executing Query: ' + this.template.id);
         // validate params
         const paramsKeys = Object.keys(params || {});
         const dataParamsKeys = this.template.params || [];

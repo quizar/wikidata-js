@@ -10,7 +10,7 @@ export function convertEntitizerEntityToLocalEntity(entity: EntitizerEntity) {
 
 export function convertLocalEntityToDomainEntity(localEntity: LocalEntity) {
     const domainEntity: DomainEntity = {
-        id: localEntity.entity.id,
+        id: localEntity.entity.wikiId,
         abbr: localEntity.entity.abbr,
         aliases: localEntity.entity.aliases,
         cc2: localEntity.entity.cc2,
@@ -31,14 +31,19 @@ export function convertLocalEntityToDomainEntity(localEntity: LocalEntity) {
     switch (localEntity.entity.type) {
         case 'H':
             domainEntity.type = 'PERSON';
+            break;
         case 'P':
             domainEntity.type = 'PRODUCT';
+            break;
         case 'O':
             domainEntity.type = 'ORG';
+            break;
         case 'L':
             domainEntity.type = 'LOCATION';
+            break;
         case 'E':
             domainEntity.type = 'EVENT';
+            break;
     }
 
     cleanObject(domainEntity);
